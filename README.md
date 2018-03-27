@@ -29,11 +29,10 @@ Pronto, o DANFE está configurado para gerar o XML e o PDF da nota fiscal eletr�
 </tbody>
 </table>
 
-<div class="code-block">
 <h3>modelo de uso:</h3>
 <strong>Método HTTP GET:</strong> apikey e chave
+
 http://danfe.br.com/api/nfe/danfe.json?apikey=API_KEY&amp;chave=CHAVE_DE_ACESSO
-</div>
 
 <h3>Erros da API (status = false)</h3>
 <table>
