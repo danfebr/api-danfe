@@ -4,21 +4,24 @@ error_reporting(E_STRICT);
 require_once 'danfe.class.php';
 
 $chave = $_POST['chave'];
+$captcha = $_POST['captcha'];
+$key = $_POST['key'];
 
 $danfe = new Danfe();
 
-if (!empty($chave)) {
-	$nfe = json_decode($danfe->chave($chave));
+if (!empty($chave) && !empty($captcha)) {
+	$nfe = json_decode($danfe->chave_captcha($chave, $key, $captcha));
 	if($nfe->status == FALSE) {
 		if($nfe->error == "ERRO_RECEITA") {
 			$data = array('status' => 0, 'msg' => $nfe->mensagem);
 		} else {
 			$data = array('status' => 0, 'msg' => $danfe->erro($nfe->error));
 		}
-	} else {
-		$data = array('status' => 1, 'xml' => $nfe->xml, 'pdf' => $nfe->pdf);
-	}
+    }else
+        $data = array('status' => 1, 'xml' => $nfe->xml, 'pdf' => $nfe->pdf);
 }
+$key = json_decode($danfe->captcha())->key;
+$imagem = json_decode($danfe->imagem($key));
 ?>
 <!doctype html>
 <html lang="pt-br">
@@ -41,9 +44,13 @@ if (!empty($chave)) {
 			</p>
 		<?php } ?>
 		
-		<form action="" method="POST">
-			Chave de acesso da NFe:<br />
+        <form action="" method="POST">
+            <img src="<?php echo $imagem->captcha; ?>"/>
+			<p>Captcha:</p>
+			<input type="text" name="captcha" value="<?php echo $captcha; ?>" /><br />
+			<p>Chave de acesso da NFe:</p>
 			<input type="text" name="chave" value="<?php echo $chave; ?>" /><br />
+			<input type="hidden" name="key" value="<?php echo $key; ?>" /><br />
 			<input type="submit" value="Enviar" />
 		</form>
     </body>
